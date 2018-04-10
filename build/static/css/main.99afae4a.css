@@ -1,0 +1,2 @@
+.notification{height:40px;line-height:40px;font-size:20px;padding-left:20px;margin-bottom:20px}.error{background-color:#ffb6c1}.success{background-color:#90ee90}@-webkit-keyframes fade{0%{opacity:0}25%{opacity:1}75%{opacity:1}to{opacity:0}}@keyframes fade{0%{opacity:0}25%{opacity:1}75%{opacity:1}to{opacity:0}}.error,.success{-webkit-animation-name:fade;animation-name:fade;-webkit-animation-duration:3s;animation-duration:3s}
+/*# sourceMappingURL=main.99afae4a.css.map*/

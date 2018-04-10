@@ -8,6 +8,7 @@ morgan.token('data', (req, res) => {
   return JSON.stringify(req.body)
 })
 
+app.use(express.static('build'))
 app.use(cors())
 app.use(morgan(':method :url :data :status :res[content-length] - :response-time ms'))
 app.use(bodyParser.json())
@@ -62,9 +63,9 @@ const generateID = () => {
   return Math.floor(Math.random() * 1000000)
 }
 
-const PORT = 3001
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
-  console.log('bzzzzz')
+  console.log(`Server running on port ${PORT}`)
 })
 
 let persons = [
