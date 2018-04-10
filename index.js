@@ -30,8 +30,14 @@ app.delete('/api/persons/:id', (req, res) => {
 app.post('/api/persons', (req, res) => {
   const body = req.body
 
-  if (!body.name || !body.number) {
-    return res.status(400).json({ error: 'nimi tai numero puuttuu' })
+  if (!body.name) {
+    return res.status(400).json({ error: 'nimi puuttuu' })
+  }
+  if (!body.number) {
+    return res.status(400).json({ error: 'numero puuttuu' })
+  }
+  if (persons.find(p => p.name === body.name)) {
+    return res.status(409).json({ error: 'nimi on jo luettelossa' })
   }
 
   const person = {
