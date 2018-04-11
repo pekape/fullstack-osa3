@@ -20,6 +20,9 @@ app.get('/api/persons', (req, res) => {
     .then(people => {
       res.json(people.map(Person.format))
     })
+    .catch(error => {
+      console.log(error)
+    })
 })
 
 app.get('/info', (req, res) => {
@@ -31,14 +34,27 @@ app.get('/api/persons/:id', (req, res) => {
   Person
     .findById(req.params.id)
     .then(person => {
-      res.json(Person.format(person))
+      if (person) {
+        res.json(Person.format(person))
+      } else {
+        res.status(404).end()
+      }
+    })
+    .catch(error => {
+      console.log(error)
+      res.status(400).send({ error: 'virheellinen tunniste' })
     })
 })
 
 app.delete('/api/persons/:id', (req, res) => {
-  const id = Number(req.params.id)
-  persons = persons.filter(p => p.id !== id)
-  res.status(204).end()
+  Person
+   .findByIdAndRemove(req.params.id)
+   .then(result => {
+     res.status(204).end()
+   })
+   .catch(error => {
+     res.status(400).send({ error: 'virheellinen tunniste' })
+   })
 })
 
 app.post('/api/persons', (req, res) => {
@@ -63,6 +79,9 @@ app.post('/api/persons', (req, res) => {
     .save()
     .then(savedPerson => {
       res.json(Person.format(savedPerson))
+    })
+    .catch(error => {
+      console.log(error)
     })
 })
 
