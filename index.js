@@ -66,9 +66,6 @@ app.post('/api/persons', (req, res) => {
   if (!body.number) {
     return res.status(400).json({ error: 'numero puuttuu' })
   }
-  // if (persons.find(p => p.name === body.name)) {
-  //   return res.status(409).json({ error: 'nimi on jo luettelossa' })
-  // }
 
   const person = new Person({
     name: body.name,
@@ -82,6 +79,29 @@ app.post('/api/persons', (req, res) => {
     })
     .catch(error => {
       console.log(error)
+    })
+})
+
+app.put('/api/persons/:id', (req, res) => {
+  const body = req.body
+
+  const person = {
+    name: body.name,
+    number: body.number
+  }
+
+  Person
+    .findOneAndUpdate({_id: req.params.id}, person, {new: true})
+    .then(updatedPerson => {
+      if (updatedPerson) {
+        res.json(Person.format(updatedPerson))
+      } else {
+        res.status(404).end()
+      }
+    })
+    .catch(error => {
+      console.log(error)
+      res.status(400).send({ error: 'virheellinen tunniste' })
     })
 })
 
