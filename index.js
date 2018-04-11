@@ -17,12 +17,9 @@ app.use(bodyParser.json())
 app.get('/api/persons', (req, res) => {
   Person
     .find({})
-    .then(people => {
-      res.json(people.map(Person.format))
-    })
-    .catch(error => {
-      console.log(error)
-    })
+    .then(people => people.map(Person.format))
+    .then(people => res.json(people))
+    .catch(console.log)
 })
 
 app.get('/info', (req, res) => {
@@ -32,9 +29,7 @@ app.get('/info', (req, res) => {
       res.send(`puhelinluettelossa on ${count} henkilön tiedot
         <br /> ${new Date()}`)
     })
-    .catch(error => {
-      console.log(error)
-    })
+    .catch(console.log)
 })
 
 app.get('/api/persons/:id', (req, res) => {
@@ -79,14 +74,20 @@ app.post('/api/persons', (req, res) => {
     number: body.number
   })
 
-  person
-    .save()
-    .then(savedPerson => {
-      res.json(Person.format(savedPerson))
+  Person
+    .find({ name: person.name })
+    .then(found => {
+      if (found.length !== 0) {
+        res.status(409).json({ error: 'nimi on jo tietokannassa' })
+      } else {
+        person
+        .save()
+        .then(Person.format)
+        .then(savedPerson => res.json(savedPerson))
+        .catch(console.log)
+      }
     })
-    .catch(error => {
-      console.log(error)
-    })
+    .catch(console.log)
 })
 
 app.put('/api/persons/:id', (req, res) => {
