@@ -14,19 +14,11 @@ app.use(cors())
 app.use(morgan(':method :url :data :status :res[content-length] - :response-time ms'))
 app.use(bodyParser.json())
 
-const formatPerson = person => (
-  {
-    name: person.name,
-    number: person.number,
-    id: person._id
-  }
-)
-
 app.get('/api/persons', (req, res) => {
   Person
     .find({})
     .then(people => {
-      res.json(people.map(formatPerson))
+      res.json(people.map(Person.format))
     })
 })
 
@@ -39,7 +31,7 @@ app.get('/api/persons/:id', (req, res) => {
   Person
     .findById(req.params.id)
     .then(person => {
-      res.json(formatPerson(person)) 
+      res.json(Person.format(person))
     })
 })
 
