@@ -50,48 +50,23 @@ app.post('/api/persons', (req, res) => {
   if (!body.number) {
     return res.status(400).json({ error: 'numero puuttuu' })
   }
-  if (persons.find(p => p.name === body.name)) {
-    return res.status(409).json({ error: 'nimi on jo luettelossa' })
-  }
+  // if (persons.find(p => p.name === body.name)) {
+  //   return res.status(409).json({ error: 'nimi on jo luettelossa' })
+  // }
 
-  const person = {
+  const person = new Person({
     name: body.name,
-    number: body.number,
-    id: generateID()
-  }
+    number: body.number
+  })
 
-  persons = persons.concat(person)
-  res.json(person)
+  person
+    .save()
+    .then(savedPerson => {
+      res.json(Person.format(savedPerson))
+    })
 })
-
-const generateID = () => {
-  return Math.floor(Math.random() * 1000000)
-}
 
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
-
-// let persons = [
-//   {
-//     name: "Arto Hellas",
-//     number: "040-123456",
-//     id: 1
-//   },
-//   {
-//     name: "Martti Tienari",
-//     number: "040-123456",
-//     id: 2
-//   },
-//   {
-//     name: "Arto Järvinen",
-//     number: "040-123456",
-//     id: 3
-//   },
-//   {
-//     name: "Lea Kutvonen",
-//     number: "040-123456",
-//     id: 4
-//   }
-// ]
