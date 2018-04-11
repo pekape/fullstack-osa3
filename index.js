@@ -26,8 +26,15 @@ app.get('/api/persons', (req, res) => {
 })
 
 app.get('/info', (req, res) => {
-  res.send(`puhelinluettelossa on ${persons.length} henkilön tiedot
-    <br /> ${new Date()}`)
+  Person
+    .count({})
+    .then(count => {
+      res.send(`puhelinluettelossa on ${count} henkilön tiedot
+        <br /> ${new Date()}`)
+    })
+    .catch(error => {
+      console.log(error)
+    })
 })
 
 app.get('/api/persons/:id', (req, res) => {
