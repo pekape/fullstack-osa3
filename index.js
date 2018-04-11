@@ -50,13 +50,13 @@ app.get('/api/persons/:id', (req, res) => {
 
 app.delete('/api/persons/:id', (req, res) => {
   Person
-   .findByIdAndRemove(req.params.id)
-   .then(result => {
-     res.status(204).end()
-   })
-   .catch(error => {
-     res.status(400).send({ error: 'virheellinen tunniste' })
-   })
+    .findByIdAndRemove(req.params.id)
+    .then(result => {
+      res.status(204).end()
+    })
+    .catch(error => {
+      res.status(400).send({ error: 'virheellinen tunniste' })
+    })
 })
 
 app.post('/api/persons', (req, res) => {
@@ -81,10 +81,10 @@ app.post('/api/persons', (req, res) => {
         res.status(409).json({ error: 'nimi on jo tietokannassa' })
       } else {
         person
-        .save()
-        .then(Person.format)
-        .then(savedPerson => res.json(savedPerson))
-        .catch(console.log)
+          .save()
+          .then(Person.format)
+          .then(savedPerson => res.json(savedPerson))
+          .catch(console.log)
       }
     })
     .catch(console.log)
@@ -99,7 +99,7 @@ app.put('/api/persons/:id', (req, res) => {
   }
 
   Person
-    .findOneAndUpdate({_id: req.params.id}, person, {new: true})
+    .findOneAndUpdate({ _id: req.params.id }, person, { new: true })
     .then(updatedPerson => {
       if (updatedPerson) {
         res.json(Person.format(updatedPerson))
