@@ -3,6 +3,7 @@ const app = express()
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
 const cors = require('cors')
+const Person = require('./models/person')
 
 morgan.token('data', (req, res) => {
   return JSON.stringify(req.body)
@@ -13,8 +14,20 @@ app.use(cors())
 app.use(morgan(':method :url :data :status :res[content-length] - :response-time ms'))
 app.use(bodyParser.json())
 
+const formatPerson = person => (
+  {
+    name: person.name,
+    number: person.number,
+    id: person._id
+  }
+)
+
 app.get('/api/persons', (req, res) => {
-  res.json(persons)
+  Person
+    .find({})
+    .then(people => {
+      res.json(people.map(formatPerson))
+    })
 })
 
 app.get('/info', (req, res) => {
@@ -23,11 +36,11 @@ app.get('/info', (req, res) => {
 })
 
 app.get('/api/persons/:id', (req, res) => {
-  const id = Number(req.params.id)
-  const person = persons.find(p => p.id === id)
-  person ?
-  res.json(person) :
-  res.status(404).end()
+  Person
+    .findById(req.params.id)
+    .then(person => {
+      res.json(formatPerson(person)) 
+    })
 })
 
 app.delete('/api/persons/:id', (req, res) => {
@@ -68,25 +81,25 @@ app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
 
-let persons = [
-  {
-    name: "Arto Hellas",
-    number: "040-123456",
-    id: 1
-  },
-  {
-    name: "Martti Tienari",
-    number: "040-123456",
-    id: 2
-  },
-  {
-    name: "Arto Järvinen",
-    number: "040-123456",
-    id: 3
-  },
-  {
-    name: "Lea Kutvonen",
-    number: "040-123456",
-    id: 4
-  }
-]
+// let persons = [
+//   {
+//     name: "Arto Hellas",
+//     number: "040-123456",
+//     id: 1
+//   },
+//   {
+//     name: "Martti Tienari",
+//     number: "040-123456",
+//     id: 2
+//   },
+//   {
+//     name: "Arto Järvinen",
+//     number: "040-123456",
+//     id: 3
+//   },
+//   {
+//     name: "Lea Kutvonen",
+//     number: "040-123456",
+//     id: 4
+//   }
+// ]
